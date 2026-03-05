@@ -1,6 +1,13 @@
 # Enable URL rewriting
 RewriteEngine On
 
+# Redirect old paths to new admin structure
+RewriteRule ^maulyikarisalu\.php$ /app/pages/login.php [L,R=301]
+RewriteRule ^dashboard\.php$ /app/pages/dashboard.php [L,R=301]
+RewriteRule ^manage_user\.php$ /app/pages/users.php [L,R=301]
+RewriteRule ^manage_withdraw\.php$ /app/pages/withdrawals.php [L,R=301]
+RewriteRule ^admin_deposit_req\.php$ /app/pages/deposits.php [L,R=301]
+
 # Redirect to PHP files if no directory exists
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
@@ -9,8 +16,18 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 # Set the server timezone
 SetEnv TZ Asia/Kolkata
 
-# Custom 404 error page
-ErrorDocument 404 /index.html
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Disable directory listing
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
 
 # Force HTTPS redirection
 RewriteCond %{HTTPS} off
